@@ -1,0 +1,83 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=320">
+<link rel="stylesheet" type="text/css" href="Leficarbar.css">
+
+<title>Première connexion</title>
+</head>
+<body onload="onStart()">
+
+<div id="fb-root"></div>
+
+<script src="Tools.js"></script>
+
+<div style="height:600px;" class="main-div">
+ <form id="form1"  enctype="multipart/form-data" action="javascript:sendForm('addUser','form1',onSendForm);">
+<h1 id="zone_title">Première connexion</h1>
+ 
+ 
+ <input class="mobiletext" type="email" name="user" id="user" width="200px" value="" readonly>
+ <div id="zone_logout">
+ <br><a href="login.html?nologin">Utiliser un autre compte</a>
+ </div>
+ 
+ <br><br>Pseudo<br><input class="mobiletext" type="text" name="name" id="name" width="200px" value="" autofocus>
+  
+ <br><br>
+ Photo <br><input type="file" name="photo" id="photo" value="" accept="image/*" onchange="onChangePicture()">
+ <br><img alt="Votre photo" src="" id="img"><br>
+ 
+ <input type="hidden" name="action" id="action" value="login">
+ <input type="hidden" id="facebookid" name="facebookid" value="">
+ 
+ <br>
+  <INPUT class="mobilebutton" type="submit" value="S'inscrire">
+
+ </form>
+</div>
+
+
+<script>
+function searchImage(){
+	window.open("https://www.google.fr/imghp?hl=fr&tab=wi&q="+document.getElementById("user").value);
+}
+
+
+function onSendForm(rep){
+	location.href=rep;
+}
+
+function onStart(){
+	var cookieEnabled=(navigator.cookieEnabled)? true : false;
+	if(!cookieEnabled)alert("Vous devez accepter les cookies pour vous enregistrer");
+	
+		informe();
+		var mail=getParameters()["mail"];
+		document.getElementById("user").value=mail;
+		
+		var name=getParameters()["name"];
+		if(name==undefined)name=mail.split("@")[0];
+		document.getElementById("name").value=name;
+		
+		document.getElementById("facebookid").value=getParameters()["facebookid"];
+		
+		var photo=getParameters()["photo"];
+		if(photo==undefined)photo="";
+		document.getElementById("photo").files[0]=photo;		
+	 
+	onChangePicture();
+}
+
+function onChangePicture(){
+	var reader = new FileReader();
+    reader.onload = (function(theFile) {
+    						var i=new Image();i.src=this.result;
+    						document.getElementById("img").src=resize_image(i,100,0);	
+    					});   
+    reader.readAsDataURL(document.getElementById("photo").files[0]);
+}
+</script>
+
+</body>
+</html>

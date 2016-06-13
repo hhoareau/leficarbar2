@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="com.googlecode.objectify:objectify:5.1.13" type="repository">
+    <properties maven-id="com.googlecode.objectify:objectify:5.1.13" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/objectify/objectify/5.1.13/objectify-5.1.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.16.4/lombok-1.16.4.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/18.0/guava-18.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/appengine/appengine-api-1.0-sdk/1.9.24/appengine-api-1.0-sdk-1.9.24.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/appengine/appengine-api-labs/1.9.24/appengine-api-labs-1.9.24.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="com.google.appengine:appengine-endpoints:1.9.24" type="repository">
+    <properties maven-id="com.google.appengine:appengine-endpoints:1.9.24" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../IRL/lib/appengine-endpoints-1.9.24.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../IRL/lib/appengine-api-1.0-sdk-1.9.24.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

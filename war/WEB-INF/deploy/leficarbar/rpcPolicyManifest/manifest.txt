@@ -1,0 +1,3 @@
+# Module leficarbar
+# RPC service class, partial path of RPC policy file
+com.ficar.client.GreetingService, 18EF60642EB58AB4C87469E78AAC3245.gwt.rpc

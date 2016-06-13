@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=320">
+<link rel="stylesheet" type="text/css" href="Leficarbar.css">
+<title>Choisir un évenement</title>
+</head>
+<body onload="onStart()">
+
+<script src="Tools.js"></script>
+
+<div class="main-div">
+
+<br>
+<div align="center">
+<table>
+<tr>
+<td><div id="myperso"></div></td>
+<td><a href="login.html?nologin">Changer d'utilisateur</a><br><a href="delUser">Effacer mon compte</a></td>
+</tr>
+</table>
+</div>
+
+<h1>Les soirées accessibles</h1>
+<div id="zone_events" style="text-align:center;"></div>
+
+<br><br>
+<a class="mobilebutton" href="javascript:location.href='addEvent.html?user='+user.Id;">Créer un evenement</a><br>
+
+</div>
+
+<script>
+
+var events=null;
+var lg=null;
+var lat=null;
+var user=null;
+
+function setEvent(index){
+	var password=null;
+	if(events[index].password!=null)password=prompt("mot de passe");
+	location.href="addPresent?event="+events[index].Id+"&password="+password;
+}
+
+function showEvents(){
+	var code="";
+	if(events.length==0)
+		code="<p>Aucun evenement disponible</p>";
+	else
+		for(var i=0;i<events.length;i++){
+			var evt=events[i];
+			code+="<a href='javascript:setEvent("+i+")'>"+evt.title+" ("+evt.distanceFromUser+" km)<br><img style='max-width:300px;' src='"+evt.flyer+"'></a><br>";
+			if((user.currentEvent==events[i].Id  && getParameters()["nologin"]==undefined) || getParameters()["event"]==events[i].Id)setEvent(i);	
+		}		
+	
+	document.getElementById("zone_events").innerHTML=code;	
+	if(events.length==1 && getParameters()["nologin"]==undefined)setEvent(0);
+}
+
+
+
+function refreshEvents(){
+	httpGet("getEvents?user="+user.Id+"&lg="+lg+"&lat="+lat,function(rep){
+		if(rep=="No user")location.href="subscribe.html?mail="+user.Id;
+		events=JSON.parse(rep);
+		showEvents();	
+	});
+}
+
+
+function onStart(){	
+	informe();
+	httpGet("getUsers?users="+getParameters()["user"],function(rep){
+		var users=JSON.parse(rep);
+		if(users.length==0)
+			location.href="subscribe.html?message=unknown&mail="+getParameters()["user"];
+		else
+			user=users[0];
+		
+		getUser(user,function(rep){
+			document.getElementById("myperso").innerHTML=rep;
+		},60);
+		
+		setInterval(function(){
+			informe("Recherche d'evenements",true);
+			refreshEvents();
+		},60000);
+		
+		refreshEvents();
+	})
+	
+	if (navigator.geolocation){
+		  navigator.geolocation.getCurrentPosition(function(position){		  
+			  var code="";
+			  lg=position.coords.longitude;
+			  lat=position.coords.latitude;		  
+		  });
+	} else informe("Votre navigateur n'accepte pas la géolocalisation. Impossible de retrouver les évenements autour de vous.");
+}
+</script>
+
+</body>
+</html>

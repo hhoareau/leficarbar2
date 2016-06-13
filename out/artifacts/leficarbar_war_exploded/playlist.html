@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+
+
+<title>Players</title>
+</head>
+<body onload="onStart()">
+
+<script src="Tools.js"></script>
+
+<div id="playlist"></div>
+<br><input type="checkbox" checked="false">Plein écran<br>
+
+<input type="button" value="crossfade" id="crossfade" onclick="onChangeMedia();">
+
+<table>
+<tr>
+<td><div id="zone_player1"> <div id="player1"></div></div></td>
+<td><div id="zone_player2"> <div id="player2"></div></div></td>
+</tr>
+</table>
+ 
+
+<!-- https://developers.google.com/youtube/iframe_api_reference?hl=fr -->
+    
+    
+<script>
+
+var number=1;
+var hInterval;
+var idEvent=getParameters()["event"];
+var zone_player1=document.getElementById("zone_player1");
+var zone_player2=document.getElementById("zone_player2");
+var player1,player2;
+var hChangeMedia;
+var cmdCrossfade=document.getElementById("crossfade");
+
+// 2. This code loads the IFrame Player API code asynchronously.
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+//3. This function creates an <iframe> (and YouTube player) after the API code downloads.
+function onYouTubeIframeAPIReady() {
+  player1 = new YT.Player('player1', {
+    height: '200',
+    width: '300',
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+  
+  player2 = new YT.Player('player2', {
+      height: '200',
+      width: '300',
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  
+}
+
+// 4. The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+  event.target.playVideo();
+}
+
+// 5. The API calls this function when the player's state changes.
+//    The function indicates that when playing a video (state=1),
+//    the player should play for six seconds and then stop.
+var done = false;
+function onPlayerStateChange(event) {  
+	  if(event.data==1 && !done){
+		  var duration=event.target.getDuration();
+		  hChangeMedia=setTimeout("onChangeMedia()",duration*1000-20000);
+	  }
+	  //if (event.data == YT.PlayerState.ENDED && !done){onStart();done = true;} 
+}
+
+
+
+
+function onStart(){
+	setInterval(function(){
+		httpGet("getEvents?event="+idEvent,function(rep){
+			var events=JSON.parse(rep);
+			if(events.length==1)
+				showPlaylist(events[0]);
+		});
+	},30000);
+	
+	hInterval=setInterval(function(){onChangeMedia();},5000);
+}
+
+var int_crossfade=null;
+function crossfade(p1,p2,pas){
+	cmdCrossfade.enabled=false;
+	var v1=p1.getVolume();
+	var v2=p2.getVolume();
+	
+	if(v1>pas)p1.setVolume(v1-pas);else p1.setVolume(0); 
+	if(v2<100-pas)p2.setVolume(v2+pas); else p2.setVolume(100);
+	
+	if(p1.getVolume()==0 && p2.getVolume()==100){
+		clearInterval(int_crossfade);
+		cmdCrossfade.enabled=true;
+	}
+}
+
+
+function onChangeMedia(){
+	clearInterval(hChangeMedia);	
+	httpGet("getNextMedia?event="+idEvent,function(rep){			
+			if(rep!=""){
+				clearInterval(hInterval);
+				number++;
+				if(number % 2==0){
+					player1.loadVideoByUrl(rep, 0, "default");player1.setVolume(0);player2.setVolume(100);
+					//zone_player2.style.visibility="hidden";zone_player1.style.visibility="visible";
+					int_crossfade=setInterval("crossfade(player2,player1,2)",500);
+				}else{
+					player2.loadVideoByUrl(rep, 0, "default");player2.setVolume(0);player1.setVolume(100);
+					//zone_player1.style.visibility="hidden";zone_player2.style.visibility="visible";
+					int_crossfade=setInterval("crossfade(player1,player2,2)",500);
+				}
+				
+			
+				
+			}
+		});	
+}
+</script>
+
+</body>
+</html>

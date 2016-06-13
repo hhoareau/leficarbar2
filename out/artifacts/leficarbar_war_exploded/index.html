@@ -1,0 +1,22 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=340">
+<title>Ficar</title>
+</head>
+<body onload="onStart()">
+
+<script src="Tools.js"></script>
+
+<script>
+function onStart(){
+	var user_id=getCookie("user");
+	if(user_id==null || user_id.length==0)
+		location.href="login.html";
+	else
+		location.href="selEvent.html?user="+user_id;
+}
+</script>
+
+</body>
+</html>

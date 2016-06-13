@@ -1,0 +1,211 @@
+/** Add css rules here for your application. */
+
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #777777;
+  margin: 10px 5px 20px;
+  text-align: center;
+}
+
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  text-transform: uppercase;
+  text-align:inherit;
+  margin: 2px 2px 2px;
+}
+
+.mobiletext {
+	text-align:center;
+	font-size: 16px;
+	font-weight: bold;
+	color:black;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+.small-icon {
+	max-width:20px;
+	margin:0px;
+}
+
+.medium-icon {
+	max-width:40px;
+	margin:1px;
+	padding:0px;
+}
+
+
+.note-photo {
+	font-style:italic;
+	font-family:"Times New Roman", Times, serif;
+	font-size:14px;
+}
+
+.swipe {
+  overflow: hidden;
+  visibility: hidden;
+  position: relative;
+}
+
+.swipe-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+.swipe-wrap > div {
+  float:left;
+  width:100%;
+  position: relative;
+}
+
+.main-div {
+	text-align:center;
+	vertical-align: middle;
+	height: 100%;
+	text-align: center;
+}
+
+
+
+
+@media (max-width: 640px) {
+
+ /* passer tous les éléments de largeur fixe en largeur automatique */
+ body, element1, element2 {
+   width: auto;
+   margin: 0;
+   padding: 0;
+ }
+
+ /* fixer une largeur maximale  de 100 % aux éléments potentiellement problématiques */
+ img, table, td, blockquote, code, pre, textarea, input, iframe, object, embed, video {
+   max-width: 100%;
+ }
+/* conserver le ratio des images et empêcher les débordements de boîtes dûs aux border ou padding */
+ img {
+   height: auto; width: auto;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+ }
+
+ /* gestion des mots longs */
+ textarea, table, td, th, code, pre, samp {
+   word-wrap: break-word; /* passage à la ligne forcé */
+   -webkit-hyphens: auto; /* césure propre */
+   -moz-hyphens: auto;
+   hyphens: auto;
+ }
+ code, pre, samp {
+   white-space: pre-wrap; /* passage à la ligne spécifique pour les éléments à châsse fixe */
+ }
+
+ /* Passer à une seule colonne (à appliquer aux éléments multi-colonnes) */
+ element1, element2 {
+   float: none;
+   width: auto;
+ }
+
+
+ /* masquer les éléments superflus */
+ .hide_mobile {
+   display: none !important;
+ }
+}
+
+.sections {
+	margin: 0px;
+	padding:4px;
+	width:320px;
+}
+
+
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+.buttonPhoto {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:19px;
+	-webkit-border-radius:19px;
+	border-radius:19px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#b3304b;
+	font-family:arial;
+	font-size:20px;
+	font-weight:bold;
+	padding:4px 12px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.buttonPhoto:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}.buttonPhoto:active {
+	position:relative;
+	top:1px;
+}
+
+.mobilebutton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:16px;
+	-webkit-border-radius:16px;
+	border-radius:12px;
+	border:2px solid #dcdcdc;
+	display:inline-block;
+	color:#757575;
+	font-family:arial;
+	font-size:20px;
+	font-weight:bold;
+	padding:5px 12px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.mobilebutton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}.mobilebutton:active {
+	position:relative;
+	top:1px;
+}
+
+

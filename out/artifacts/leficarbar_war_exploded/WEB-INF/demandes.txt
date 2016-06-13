@@ -1,0 +1,28 @@
+//acceptIcon est l'image une fois que le destinataire a accepté la demande : un coeur percé
+//refuseIcon est l'image affiché si le destinataire a refusé la demande : un coeur brisé
+//demandIcon est l'image affiché pour signaler qu'il y a une demande en cour : un coeur
+
+nature=Bisou
+acceptIcon=http://4.bp.blogspot.com/-025vC8HsH9Q/T8y0BYlaj7I/AAAAAAAACGE/rSnt0Oodcqk/s1600/Le+clin+d'oeil+(Tom&Co+Drogenbos+News+-+Belgium).png
+refuseIcon=http://25.media.tumblr.com/avatar_be2ded531cf9_64.png
+demandIcon=http://cdn.stickerzlab.com/media/catalog/product/cache/2/thumbnail/50x/9df78eab33525d08d6e5fb8d27136e95/s/t/sticker-bouche0003.png
+demandPhoto=http://ce.img.v4.skyrock.net/4478/56374478/pics/2453503889_1.png
+refusePhoto=http://www.scottishpersonalitydisorder.org/gallery/images/album1/fuck_off.jpg
+acceptPhoto=http://scrat.hellocoton.fr/img/classic/dessins-de-bisous-levres-de-bisous-photos-7208338.png
+
+nature=Gros Bisou
+acceptIcon=http://a403.idata.over-blog.com/100x100/4/20/76/02/Coup-de-coeur.png
+refuseIcon=http://www.ado-mode-demploi.fr/wp-content/uploads/2012/11/coeur-bris%C3%A9.png
+demandIcon=http://files.gamebanana.com/img/ico/sprays/4ec686ff6af8a.png
+demandPhoto=http://www.stickexpress.fr/231-296-large/couple-amoureux.jpg
+refusePhoto=http://joliscoeurs.j.o.pic.centerblog.net/86f60444.png
+acceptPhoto=http://cdn.stickerzlab.com/media/catalog/product/cache/2/image/9df78eab33525d08d6e5fb8d27136e95/s/t/sticker-couple_profil-andre0001.png
+
+nature=un verre
+acceptIcon=http://s3.static69.com/m/image-offre/7/8/f/f/78fff5f9ba10031b7370c7e7c5fa8d89-50x50.png
+refuseIcon=http://25.media.tumblr.com/avatar_be2ded531cf9_64.png
+demandIcon=http://icons.iconarchive.com/icons/cedarseed/cocktails/64/Mojito-icon.png
+demandPhoto=https://fbcdn-sphotos-a-a.akamaihd.net/hphotos-ak-frc1/p480x480/227630_476919172354081_543556103_n.png
+refusePhoto=http://a51.idata.over-blog.com/500x334/0/54/58/05/Images-4./Greg.png
+acceptPhoto=http://www.comptoirazur.fr/209-312-thickbox/2-verres-a-pied-tulipe-en-verre-souffle.jpg
+

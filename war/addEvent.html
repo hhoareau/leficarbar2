@@ -1,0 +1,176 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=320">
+<link rel="stylesheet" type="text/css" href="Leficarbar.css">
+
+<title>Envoyer un message</title>
+</head>
+<body onload="onStart()">
+
+<div id="fb-root"></div>
+
+<div class="main-div">
+<h1>Créer un évenement</h1>
+
+<script src="Tools.js"></script>
+
+ <form id="form2" enctype="multipart/form-data" action="javascript:sendForm('addEvent','form2',onAddEvent)">
+ 
+ Lieu<br>
+ <input  style="text-align:center" type="text" name="lieu" id="lieu" size="20" value="" autofocus onchange="findLieu();onChangeTitre();">
+ 
+ <div id="zone_adresse">
+ <br><br>
+ Adresse (si nouveau lieu)<br>
+ <input  style="text-align:center" type="text" name="adresse" id="adresse" size="30" value="" onchange="onChangePicture();">
+ <input type="checkbox" name="ici" id="ici">Ici<br>
+ </div>
+ 
+ <br>Début<br>
+ <input  style="text-align:center" type="date" name="dtStart" id="dtStart" size="15" value="" onchange="onChangePicture();">
+ <input  style="text-align:center" type="time" name="dtTime" id="dtTime" size="5" value="" onchange="onChangePicture();">
+ 
+ <br><br>
+ 
+ Duree <input  style="text-align:center;width:50px;" type="number" name="duration" id="duration" value="24"> heures<br>
+ 
+ <br>
+Titre de l'évenement<br>
+ <input  style="text-align:center" type="text" name="title" id="title" size="20" value=""  onchange="onChangePicture();">
+ <br><br>
+ 
+ Mot de passe pour entrer (optionnel)<br>
+ <input  style="text-align:center" type="password" name="password" id="password" size="20" value="">
+ 
+ Online
+ <input  style="text-align:center;width:50px;" type="number" name="maxonline" id="maxonline" size="5" value="50"> personnes
+ 
+ 
+<br><br>
+ 
+ Flyer
+ <input type="checkbox" id="autoflyer">Auto
+  <input type="file" id="flyer" name="flyer" accept="image/*" onchange="onChangePicture();">
+  <br><img id="apercu_flyer" ></img>
+
+ <br><br>
+ 
+ Invités (Un Email par ligne)<br>
+ <textarea rows="5" cols="30" name="invites" id="invites"></textarea>
+
+<br><br>
+ 
+ <INPUT class="mobilebutton"  type="submit" value="Enregistrer">
+
+ <input type="hidden" name="localdate" id="localdate" value="">
+  <input type="hidden" name="position" id="position" value="">
+ </form>
+
+</div>
+
+<script type="text/javascript">
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+ 
+
+function findLieu(){
+	
+	var txtAdresse=document.getElementById("adresse");
+	httpGet("findPlace?name="+document.getElementById("lieu").value,function(rep){
+		var adresses=JSON.parse(rep);
+		if(adresses.length==0){
+			informe("Nouveau lieu, indiquer l'adresse");
+			txtAdresse.value="";
+		} else {
+			txtAdresse.value=adresses[0].number+" "+adresses[0].street+" "+adresses[0].CP;
+		}
+	});
+}
+
+function onAddEvent(rep){
+	if(rep.indexOf("error")==0)
+		informe(rep);
+	else
+		location.href=rep;	
+}
+
+var user;
+
+function onStart(){
+	var now=new Date();
+	document.getElementById("localdate").value=now.getTime();
+	
+	httpGet("getUsers?users="+getParameters()["user"],function(rep){
+		user=JSON.parse(rep)[0];
+		onChangeTitre();
+	});
+	
+	informe();
+	document.getElementById("dtStart").valueAsNumber=now;
+	var timestr=now.toLocaleTimeString();
+	document.getElementById("dtTime").value=timestr.slice(0,5);
+	
+	var lieu=getCookie("lieu");
+	if(lieu!=null){
+		document.getElementById("lieu").value=lieu.slice(1,lieu.length-1);
+		if(document.getElementById("lieu").value!=undefined)findLieu();	
+	}
+
+	if (navigator.geolocation){
+		  navigator.geolocation.getCurrentPosition(function(position){
+			  document.getElementById("position").value=position.coords.latitude+","+position.coords.longitude;
+		  });
+	} else 
+		document.getElementById("ici").enabled=false;
+	
+	FB.init({
+	    appId  : '154517774741100',
+	    status : true, // check login status
+	    cookie : true, // enable cookies to allow the server to access the session
+	    xfbml  : true, // parse XFBML
+	    oauth : true, // enables OAuth 2.0
+	    channelUrl : 'https://mywallbar.appspot.com/channel.html'
+	});
+
+}
+
+function onChangeTitre(){
+	document.getElementById("title").value=document.getElementById("lieu").value+" by "+user.name;
+}
+
+function onChangePicture(){
+	var reader = new FileReader();
+    reader.onload = (function(theFile) {
+    						var i=new Image();
+    						i.src=this.result;
+    						
+    						var canvas = document.createElement("canvas");
+    						var ctx=canvas.getContext('2d');
+    						
+    						canvas.width=300;
+    						canvas.height=400;
+    						
+    						ctx.drawImage(i,0,0,i.width,i.height);
+    						
+    						addText(ctx,20,20,"white",20,document.getElementById("title").value+" au "+document.getElementById("lieu").value,null,300);
+    						addText(ctx,20,40,"white",10,document.getElementById("adresse").value,null,200);
+    						addText(ctx,200,300,"white",10,"le "+document.getElementById("dtStart").value,null,200);
+    						addText(ctx,200,310,"white",10,"a partir de "+document.getElementById("dtTime").value,null,200);
+    										
+    						document.getElementById("apercu_flyer").src=canvas.toDataURL("image/png");
+    					});   
+    reader.readAsDataURL(document.getElementById("flyer").files[0]);
+}
+
+
+</script>
+
+</body>
+</html>

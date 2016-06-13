@@ -1,0 +1,41 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=340">
+<title>Classement</title>
+</head>
+<body onload="onStart()">
+
+<script src="Tools.js"></script>
+
+<div id="zone"></div>
+
+<script>
+var idEvent=getParameters()["event"];
+var users=null;
+
+function showClassement(){
+	httpGet("getClassement?event="+idEvent,function(rep){
+		if(rep.length>0){
+			users=JSON.parse(rep);
+			var zone=document.getElementById("zone");
+			var rc="";
+			users.forEach(function(user){
+				rc+="<br><img width='200px' src='"+user.photo+"'> : "+user.score+" points";
+			});
+			zone.innerHTML=rc;	
+		}
+	});
+}
+
+function onStart(){
+	 showClassement();
+	setInterval(function(){
+	 	showClassement();}
+ 		,20000);
+}
+
+</script>
+
+</body>
+</html>

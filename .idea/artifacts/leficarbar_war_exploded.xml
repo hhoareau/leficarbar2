@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="leficarbar:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/leficarbar_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="leficarbar" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="commons-fileupload-1.3.jar" module-name="leficarbar" />
+          <element id="library" level="module" name="google-api-client-1.15.0-rc.jar" module-name="leficarbar" />
+          <element id="library" level="module" name="google-oauth-client-1.15.0-rc.jar" module-name="leficarbar" />
+          <element id="library" level="module" name="joda-time-2.2.jar" module-name="leficarbar" />
+          <element id="library" level="project" name="com.google.appengine:appengine-endpoints:1.9.24" />
+          <element id="library" level="project" name="com.googlecode.objectify:objectify:5.1.13" />
+          <element id="library" level="project" name="com.google.gdata:core:1.47.1" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="leficarbar/web/Web" />
+    </root>
+  </artifact>
+</component>

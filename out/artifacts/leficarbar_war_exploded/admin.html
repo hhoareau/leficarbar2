@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=340">
+<title>Classement</title>
+</head>
+<body onload="onStart()">
+
+<script src="Tools.js"></script>
+
+<h2>Console admin</h2>
+
+<p>
+Pour envoyer des messages, des photos, des titres<br>
+- envoyer les photos ou vidéos à admin@mywallbar.appspotmail.com<br>
+- il est egalement possible de poster des vidéos en collant l'url youtube comme texte de message
+</p>
+
+Selectionner une soirée
+<select id="events" onchange="onChangeEvent()"></select>
+<div id="zone_link"></div>
+
+
+<script>
+
+function onChangeEvent(idEvent){
+	var rc="<br><a href='gallery.html?photo_size=300&event="+idEvent+"'>Pele-Mele des photos</a>";
+	rc+="<br><a href='playlist.html?event="+idEvent+"'>PlayList musicale</a>";
+	rc+="<br><a href='slideshow.html?event="+idEvent+"'>SlideShow des photos</a>";
+	rc+="<br><a href='charts.html?event="+idEvent+"'>Classement des invités</a>";
+	document.getElementById("zone_link").innerHTML=rc;	
+}
+
+function onStart(){
+	
+	var idEvent=getParameters()["event"];
+	if(idEvent)
+		onChangeEvent(idEvent);
+	else {
+		var lst=document.getElementById("events");
+		httpGet("getEvent?all",function(rep){
+			if(rep=="No event"){
+				window.location.href="addEvent.html";
+				return;
+			}
+			if(rep.indexOf("[")!=0)rep="["+rep+"]";
+			JSON.parse(rep).forEach(function(event){
+				lst.options[lst.options.length]=new Option(event.title,event.Id,true,true);	
+				idEvent=event.Id;
+			});
+			lst.selectedIndex=0;
+			onChangeEvent(idEvent);
+		});	
+	}
+}
+</script>
+
+<br>
+
+Cliquer sur le flash code <br>pour ouvrir l'interface utilisateur<br>
+<a target=_blank  href="photo.html">
+<img src="QRCode_photo.png"></img></a>
+
+
+
+
+
+
+
+<br><br><a href='init'>Repartir de zéro (efface la base de donnees)</a>
+
+</body>
+</html>

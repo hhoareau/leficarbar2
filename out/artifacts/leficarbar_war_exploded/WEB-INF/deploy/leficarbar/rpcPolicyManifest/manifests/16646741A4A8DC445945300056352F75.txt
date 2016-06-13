@@ -1,0 +1,2 @@
+serviceClass: com.ficar.client.GreetingService
+path: 18EF60642EB58AB4C87469E78AAC3245.gwt.rpc

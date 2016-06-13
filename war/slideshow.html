@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<link href='http://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="Leficarbar.css">
+<style type="text/css">
+h1 {
+	color:white;
+	font-family:"Indie Flower" cursive;
+}
+</style>
+<title>Insert title here</title>
+</head>
+<body onload="onStart()" style="background-color:black">
+
+<script src="Tools.js"></script>
+<script src="swipe.js"></script>
+ 
+ <div id='slider' class='swipe'>
+  <div id="slides" class='swipe-wrap'">
+  </div>
+</div>
+ 
+<script>
+
+var idEvent=getParameters()["event"];
+
+addEventListener("click", function() {
+    var
+          el = document.documentElement
+        , rfs =
+               el.requestFullScreen
+            || el.webkitRequestFullScreen
+            || el.mozRequestFullScreen
+    ;
+    rfs.call(el);
+});
+
+function RefreshSlideshow(){
+	
+	var div = document.getElementById("slides");
+	div.innerHTML="";
+	httpGet("getSlideShow?delay=3&event="+idEvent,function(rep){
+		JSON.parse(rep).forEach(function(message){
+			var newLI = document.createElement("div");
+			var code="<img style='height:90%;width=auto;' src='data:image/jpeg;base64,"+message.photo+"'/>";
+			if(message.text!=null)code+="<h1>"+message.text+"</h1>";
+			newLI.innerHTML=code;
+			
+			newLI.style.width=window.innerWidth-10;
+			newLI.style.height=window.innerHeight-30;
+			newLI.align="center";
+			newLI.verticalAlign="middle";
+			div.appendChild(newLI);
+		});
+		
+		window.mySwipe = new Swipe(document.getElementById('slider'), {
+				  startSlide: 0,
+				  speed: 400,
+				  auto: 3000,
+				  continuous: true,
+				  disableScroll: true,
+				  stopPropagation: false,
+				  callback: function(index, elem) {},
+				  transitionEnd: function(index, elem) {}
+				});
+	});
+}
+
+/**
+ * 
+ */
+function onStart(){
+	RefreshSlideshow();
+	setInterval(function(){
+		window.location.reload();
+	},40000);
+	
+ startFullScreen();
+
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="Leficarbar.css">
+<meta name="viewport" content="width=320">
+
+<title>Envoyer un message</title>
+</head>
+<body onload="onStart()">
+
+<link href="/apple-touch-icon.png" rel="apple-touch-icon" />
+
+<script src="Tools.js"></script>
+
+<div class="sections" style="background-color:#FFFF00">
+<table>
+ <tr>
+ <td>
+<div id="myperso"></div>
+ </td>
+ <td>
+<div id="zone_myEvent"></div>
+<div id="lblMessage"></div>
+ </td>
+ </tr>
+ </table>
+ </div>
+ 
+ <div class="sections" style="background-color:#FFD511;"  id="section_photo">
+ <form style="margin:0px;" id="form1" enctype="multipart/form-data" method="post" action="javascript:sendMessage()">
+ <table style="text-align:left; v-align:middle;"><tr>
+ <td><h2>Vos messages</h2> </td>
+ <td><INPUT class="buttonPhoto" type="submit" value="Envoyer"></td>
+ </tr></table>
+ 
+<input class="mobiletext" type="text" name="text" id="text" style="width:300px;margin:3px" value="votre message" onfocus="document.getElementById('text').value='';">
+ <br>
+ <input type="file" name="file" id="file" accept="image/*;capture=camera">
+ <br>
+ <INPUT type="hidden" name="event" id="event">
+ <INPUT type="hidden" name="user" id="user">
+ <INPUT type="checkbox" value="anonymous" name="anonymous" id="anonymous">Anonyme
+ 
+ </form>
+ </div>
+ 
+<div class="sections" style="background-color:#FFAA22;" id="section_musique">
+ <table style="text-align:left;"><tr>
+ <td><h2>Votre musique</h2> </td>
+ <td><a class="mobilebutton" href="javascript:onSearchMusic()">+</a></td>
+ </tr></table>
+
+
+<div id="playlist"></div>
+<!-- <br><a href="playlist.html?view">Complete</a> -->
+</div>
+
+<div class="sections" style="background-color:#FF8033;" id="section_sentiments">
+<h2>Vos sentiments</h2>
+<div id="members"></div>
+</div>
+
+<div class="sections" style="background-color:#FF5544;" id="section_admin">
+<div style="text-align:center;"><INPUT class="buttonPhoto" type="button" value="Quitter" onclick="quit()"></div>
+ <div id="zone_admin"></div>
+ </div>
+  
+<script>
+var myEvent=null;
+var user=null;
+var demandes="";
+
+
+function quit(){
+	location.href="addPresent?nologin&remove&user="+user.Id+"&event="+myEvent.Id;
+}
+
+function onSearchMusic(){
+	var query=prompt("Requete youtube");
+	location.href="youtube.html?q="+query+"&user="+user.Id+"&event="+myEvent.Id;
+}
+
+function onSend(rep){
+	informe("Message posté",false);
+	document.getElementById("text").value="";
+}
+
+function sendMessage(){		
+	var form=document.getElementById("form1");
+	var data=document.getElementById("file");
+	var reader = new FileReader();
+	
+	reader.onload = (function(theFile) {
+	
+		httpPost("addMessage?text="+document.getElementById("text").value
+				+"&anonymous="+document.getElementById("anonymous").value
+				+"&event="+myEvent.Id
+				+"&user="+user.Id
+				,this.result
+				,onSend
+		);
+	});
+	
+	if(data.files.length==1)
+		reader.readAsDataURL(data.files[0]);
+	else
+		httpPost("addMessage?text="+document.getElementById("text").value
+				+"&anonymous="+document.getElementById("anonymous").value
+				+"&event="+myEvent.Id
+				+"&user="+user.Id
+				,null
+				,onSend
+		);
+	
+	data.value="";
+	data.files[0]=null;
+}
+
+function addSong(){
+	var url=prompt("URL du titre");
+	httpPost("addMessage?text="+url+"&event="+myEvent.Id,null,function(rep){
+		informe("Ajouté");
+	});
+}
+
+/**
+ * Modify the score of song by one step (increase or decrease)
+ */
+function onSetScore(step,url){
+	httpGet("setScore?step="+step+"&url="+URLEncode(url)+"&event="+myEvent.Id,function(rep){
+		myEvent=JSON.parse(rep);
+		showPlaylist(myEvent);
+	});
+}
+
+function onSetScoreUser(step,user){
+	httpGet("setScoreUser?step="+step+"&cible="+URLEncode(user)+"&event="+myEvent.Id,function(rep){
+		myEvent=JSON.parse(rep);
+		showMembers(myEvent);
+	});
+}
+
+
+function showmyEvent(user,evt){
+	var div=document.getElementById("zone_myEvent");
+	div.innerHTML="<h2>"+evt.title+"</h2>";
+	div.innerHTML+=user.state;
+	div.innerHTML+="<br><a href='profile.html?event="+myEvent.Id+"&user="+user.Id+"'>Modifier mon profil</a>"
+	
+	if(evt.logo!=null)div.innerHTML+="<img src='"+evt.logo+"'>"+div.innerHTML;
+}
+
+function addDemande(typeDemande,cible){
+	var code=URLEncode("demande="+typeDemande+";to="+cible+";from="+user.Id);
+	httpPost("addMessage?text="+code+"&event="+myEvent.Id,null,function(rep){
+		informe("Demande transmise");
+	});
+}
+
+
+function findDemandes(id){
+	var rc=new Array(0);
+	user.demandes.forEach(function(dem){
+		if(dem.from==id)
+			rc[rc.length]=dem;
+	});
+	return rc;
+}
+
+
+function respons(nature,u,accept){
+	httpGet("respons?nature="+nature+"&from="+u+"&to="+user.Id+"&accept="+accept+"&event="+myEvent.Id,function(rep){
+		informe("envoyé");
+		if(rep.length>0){
+			user=JSON.parse(rep);
+			showMember(myEvent);
+		}
+	});
+}
+
+
+function showMember(evt){
+	if(evt!=null){
+		var div=document.getElementById("members");
+		var code="<table>";
+		httpGet("getClassement?event="+evt.Id,function(rep){
+			JSON.parse(rep).forEach(function(u){
+				if(user.Id!=u.Id){
+					var img_code=u.name;
+					getUser(u,function(rep){
+						code+="<tr><td><a href='javascript:onSetScoreUser(1,\""+u.Id+"\")'><img class='small-icon' src='up.png'></a><br>"
+						+"<a href='javascript:onSetScoreUser(-1,\""+u.Id+"\")'><img class='small-icon' src='down.png'></a></td><td>"+rep+"</td>";
+						
+						code+="<td><table><tr><td>lui proposer</td></tr><tr><td>"
+				
+						myEvent.typeDemandes.split("nature=").forEach(function(demande){
+							if(demande.length>0 && !demande.startsWith("//")){
+								var nature=demande.split("\r")[0];
+								code+="<a href='javascript:addDemande(\""+nature+"\",\""+u.Id+"\")'>"
+									+"<img class='medium-icon' title='"+nature+"' src='"+extract(demande,"demandIcon=","\r\n")+"'>"
+									+"</a>";	
+							}
+						},50);
+						code+="</td></tr></table></td><td>";
+						
+						findDemandes(u.Id).forEach(function(d){
+							if(d.reponse==null)
+								code+="Un "+d.nature+" ?<a href='javascript:respons(\""+d.nature+"\",\""+d.from+"\",true)'><img class='small-icon' src='up.png'></a><a href='javascript:respons(\""+d.nature+"\",\""+d.from+"\",false)'><img  class='small-icon' src='down.png'></a><br>";
+							else
+								code+="<img class='medium-icon' title='"+d.reponse+"' src='"+d.icon+"'><br>";						
+						});
+						
+						code+="</td></tr>";
+
+					});
+				}
+			});
+			
+			div.innerHTML=code+"</table>";
+		});
+	}
+}
+
+
+
+function refreshEvent(us,onEnd){
+	httpGet("getEvents?event="+user.currentEvent,function(rep){
+		var events=JSON.parse(rep);
+		if(events.length==1)myEvent=events[0];						
+		onEnd();
+	});
+}
+
+
+function onStart(){
+	
+	var user_id=getCookie("user");
+	if(user_id==null || user_id.length==0)location.href="login.html";
+	
+	httpGet("getUsers?users="+user_id,function(rep){
+			if(rep!="[]"){
+				user=JSON.parse(rep)[0];
+				
+				getUser(user,function(rep){
+					document.getElementById("myperso").innerHTML=rep;
+				},50);
+				
+				
+				document.getElementById("user").value=user.Id;
+				
+				demandes=user.demandes.join(",");
+				if(user.currentEvent==null)location.href="selEvent.html?user="+user.Id;
+				
+				refreshEvent(user,function(){
+					showmyEvent(user,myEvent)
+					showPlaylist(myEvent);
+					showMember(myEvent);	
+					
+					document.getElementById("event").value=myEvent.Id;
+					
+					if(myEvent.leader==user.Id){
+						var idEvent=myEvent.Id;
+						var style="class='buttonPhoto' style='width:200px;font-size:16px'";
+						var rc="<div style='text-align:center;'><br><a class='buttonPhoto' style='width:200px;font-size:16px' href='gallery.html?photo_size=300&event="+idEvent+"'>Pele-Mele des photos</a>";
+						rc+="<br><br><a "+style+" href='playlist.html?event="+idEvent+"'>PlayList musicale</a>";
+						rc+="<br><br><a "+style+" href='slideshow.html?event="+idEvent+"'>SlideShow des photos</a>";
+						rc+="<br><br><a "+style+" href='charts.html?event="+idEvent+"'>Classement des invités</a>";
+						rc+="<br><br><a "+style+" href='closeEvent?event="+idEvent+"'>Terminer la soirée</a></div>";
+						
+						document.getElementById("zone_admin").innerHTML=rc;
+					}	
+				});
+							
+				//Rafraichissement réguilier
+				setInterval(function(){
+					refreshEvent(user,function(){showPlaylist(myEvent);showMember(myEvent);})
+					},60000);
+			} else location.href="login.html?nologin";
+	});
+}
+</script>
+
+</body>
+</html>

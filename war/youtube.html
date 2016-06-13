@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=320">
+<link rel="stylesheet" type="text/css" href="Leficarbar.css">
+
+<title>Login</title>
+</head>
+<body onload="onStart()">
+
+<script src="Tools.js"></script>
+
+<div class="main-div" id="result">
+ </div>
+ 
+
+<script>
+
+var user=getParameters()["user"];	
+var myevent=getParameters()["event"];	
+var query=getParameters()["q"];
+var result=document.getElementById("result");
+var clientid="AIzaSyDH9s38CUkD1a67ixIZgmjIgT9IYxzjvyE";
+
+function onStart(){
+	
+	//https://developers.google.com/youtube/v3/sample_requests
+	 
+	httpGet("https://www.googleapis.com/youtube/v3/search?part=snippet,id&duration=medium&maxResults=20&order=viewCount&q="+query+"&key="+clientid,function(rep){
+		var songs=JSON.parse(rep);
+		var code="<table>";
+		
+		songs.items.forEach(function(song){
+			var see="https://www.youtube.com/watch?v="+song.id.videoId;
+			code=code+"<tr><td>"
+										+"<a href='"+see+"'><img style='width:150px;' src='"+song.snippet.thumbnails.medium.url+"'></a></td><td>"
+										+"<a href='javascript:addSong(\""+see+"\")'>"+song.snippet.title+"</a></td></tr>";
+		});
+		result.innerHTML=code+"</table>";
+	});
+}
+
+function addSong(id){
+	httpPost("addMessage?text="+id
+			+"&anonymous=false"
+			+"&event="+myevent
+			+"&user="+user
+			,null
+			,function(rep){
+				location.href="photo.html?message=song+send&event="+myevent+"&user="+user;
+			}
+	);
+}
+</script>
+
+</body>
+</html>
